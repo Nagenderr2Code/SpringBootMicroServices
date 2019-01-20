@@ -2,14 +2,14 @@ package com.code.microservice.limitservice.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 @ConfigurationProperties("limit-service")
 public class LimitsJavaConfig {
 
-    private int max=1;
-    private int min=2;
+    private int max;
+    private int min;
 
     public int getMax() {
         return max;

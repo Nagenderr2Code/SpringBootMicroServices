@@ -1,9 +1,9 @@
 package com.code.microservice.currencyconverterservice.controller;
 
 
+import com.code.microservice.currencyconverterservice.client.CurrencyConverterClient;
 import com.code.microservice.currencyconverterservice.model.CurrencyConverted;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +20,12 @@ public class CurrencyConverterController {
 
     private String uri = "http://localhost:8000/exchange/{from}/to/{to}";
 
+    private CurrencyConverterClient converterClient;
+
+    public CurrencyConverterController(CurrencyConverterClient converterClient) {
+        this.converterClient = converterClient;
+    }
+
     @GetMapping("/{quantity}")
     public CurrencyConverted convert(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 
@@ -35,6 +41,15 @@ public class CurrencyConverterController {
 
         CurrencyConverted currencyConverted = new RestTemplate().getForObject("http://localhost:8000/exchange/{from}/to/{to}",
                 CurrencyConverted.class, uriVariables);
+
+        currencyConverted.setConvertedValue(currencyConverted.getConversionMultiple().multiply(quantity));
+        return currencyConverted;
+    }
+
+    @GetMapping("/feign/{quantity}")
+    public CurrencyConverted convertUsingFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
+
+        CurrencyConverted currencyConverted = converterClient.convert(from, to);
 
         currencyConverted.setConvertedValue(currencyConverted.getConversionMultiple().multiply(quantity));
         return currencyConverted;

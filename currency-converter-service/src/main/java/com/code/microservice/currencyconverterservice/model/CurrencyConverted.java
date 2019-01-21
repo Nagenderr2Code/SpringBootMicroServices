@@ -9,6 +9,15 @@ public class CurrencyConverted {
     private BigDecimal amountToConvert;
     private BigDecimal conversionMultiple;
     private BigDecimal convertedValue;
+    private int port;
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
 
     public String getFrom() {
         return from;
